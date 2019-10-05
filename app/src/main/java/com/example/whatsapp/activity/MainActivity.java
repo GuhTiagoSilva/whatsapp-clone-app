@@ -1,5 +1,6 @@
 package com.example.whatsapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
+
         FragmentPagerItemAdapter fragmentPagerItemAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(),
 
                 FragmentPagerItems.with(this)
@@ -54,16 +56,31 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    public void userLogOut(){
+        auth = FirebaseConfig.getFirebaseAuthentication();
+        auth.signOut();
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.exitMenu:
-                auth = FirebaseConfig.getFirebaseAuthentication();
-                if(auth!=null){
-                    auth.signOut();
-                }
+                userLogOut();
+                openLoginPage();
+                break;
+
+            case R.id.settingsMenu:
+                openSettingsPage();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openSettingsPage(){
+        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+    }
+
+    public void openLoginPage(){
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 }

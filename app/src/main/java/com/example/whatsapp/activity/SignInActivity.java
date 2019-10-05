@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.whatsapp.R;
 import com.example.whatsapp.config.FirebaseConfig;
+import com.example.whatsapp.helper.Base64Custom;
 import com.example.whatsapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,17 +19,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity {
-
 
     private EditText etEmail, etPassword, etName;
     private Button btCreate;
     private FirebaseAuth auth;
     private FirebaseDatabase fireRef;
-
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +55,10 @@ public class SignInActivity extends AppCompatActivity {
 
         String email = etEmail.getText().toString();
         String password = etPassword.getText().toString();
+        String name = etName.getText().toString();
 
-        User user = new User();
+        user = new User();
+        user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
 
@@ -72,6 +73,17 @@ public class SignInActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "Cadastro realizado com sucesso", Toast.LENGTH_SHORT);
                         finish();
+
+                        try{
+                            String userId = Base64Custom.EncodeBase64(user.getEmail());
+                            user.setUserId(userId);
+                            user.save();
+
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+
+
                     } else {
 
                         try {

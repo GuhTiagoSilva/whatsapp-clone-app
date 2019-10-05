@@ -45,9 +45,19 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        textDontHaveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSignInPage();
+            }
+        });
     }
 
 
+    public void openSignInPage(){
+        startActivity( new Intent(LoginActivity.this, SignInActivity.class));
+    }
 
     public void login() {
 
